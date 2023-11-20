@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\VoitureRepository;
+use App\Repository\CarRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
  
 #[ApiResource]
-#[ORM\Entity(repositoryClass: VoitureRepository::class)]
-class Voiture
+#[ORM\Entity(repositoryClass: CarRepository::class)]
+class Car
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,7 +26,7 @@ class Voiture
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -73,14 +73,14 @@ class Voiture
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): static
+    public function setUser(?User $user): static
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
 
         return $this;
     }

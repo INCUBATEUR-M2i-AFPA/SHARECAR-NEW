@@ -3,14 +3,14 @@
 namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use App\Repository\TrajetRepository;
+use App\Repository\TripRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
  
 #[ApiResource]
-#[ORM\Entity(repositoryClass: TrajetRepository::class)]
-class Trajet
+#[ORM\Entity(repositoryClass: TripRepository::class)]
+class Trip
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -40,19 +40,20 @@ class Trajet
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Voiture $voiture = null;
+    private ?Car $car = null;
    
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
+    private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'trajet', targetEntity: Etape::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'trip', targetEntity: Etape::class, orphanRemoval: true)]
     private Collection $etapes;
 
     public function __construct()
     {
         $this->etapes = new ArrayCollection();
     }
+    
 
     public function getEtapes(): Collection
     {
@@ -148,28 +149,39 @@ class Trajet
         return $this;
     }
 
-    public function getVoiture(): ?Voiture
+    public function getCar(): ?Car
     {
-        return $this->voiture;
+        return $this->car;
     }
 
-    public function setVoiture(?Voiture $voiture): static
+    public function setCar(?Car $car): static
     {
-        $this->voiture = $voiture;
+        $this->car = $car;
 
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): static
+    public function setUser(?User $user): static
 {
-    $this->utilisateur = $utilisateur;
+    $this->user = $user;
 
     return $this;
 }
+
+public function addEtape(Etape $etape): self
+{
+    if (!$this->etapes->contains($etape)) {
+        $this->etapes[] = $etape;
+        $etape->setTrip($this);
+    }
+
+    return $this;
+}
+
 
 }

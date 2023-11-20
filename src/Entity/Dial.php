@@ -28,11 +28,11 @@ class Dial
 
     #[ORM\ManyToOne]
      #[ORM\JoinColumn(nullable: false)]
-     private ?Utilisateur $utilisateur = null;
+     private ?User $user = null;
     
      #[ORM\ManyToOne]
      #[ORM\JoinColumn(nullable: false)]
-     private ?Utilisateur $utilisateur1 = null;
+     private ?User $user1 = null;
 
     public function getId(): ?int
     {
@@ -75,26 +75,26 @@ class Dial
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->Utilisateur;
+        return $this->User;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): static
+    public function setUser(?User $user): static
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getUtilisateur1(): ?Utilisateur
+    public function getUser1(): ?User
     {
-        return $this->utilisateur1;
+        return $this->user1;
     }
 
-    public function setUtilisateur1(?Utilisateur $utilisateur1): static
+    public function setUser1(?User $user1): static
     {
-        $this->utilisateur1 = $utilisateur1;
+        $this->user1 = $user1;
 
         return $this;
     }

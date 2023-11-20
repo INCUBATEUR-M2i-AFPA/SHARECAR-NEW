@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\UtilisateurRepository;
+use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -13,8 +13,8 @@ use Doctrine\Common\Collections\Collection;
 
 
 #[ApiResource]
-#[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -57,10 +57,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?string $date_de_naissance = null;
 
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: "utilisateur")]
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: "user")]
     private Collection $images;
 
-    #[ORM\OneToMany(targetEntity: ImageVoitures::class, mappedBy: "utilisateur")]
+    #[ORM\OneToMany(targetEntity: ImageVoitures::class, mappedBy: "user")]
     private Collection $imagesVoitures;
 
 

@@ -6,7 +6,7 @@ security:
     providers:
         app_user_provider:
             entity:
-                class: App\Entity\Utilisateur
+                class: App\Entity\User
                 property: email
     firewalls:
         login:
@@ -39,9 +39,9 @@ security:
     access_control:
         #- { path: ^/api/login, roles: PUBLIC_ACCESS }
         #- { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
-        #        - { path: ^/api/,       roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/api/,       roles: PUBLIC_ACCESS,  requires_channel: https localhost}
-        - { path: ^/api,       roles: PUBLIC_ACCESS,  requires_channel: https localhost}
+           - { path: ^/api/,       roles: IS_AUTHENTICATED_FULLY }
+       # - { path: ^/api/,       roles: PUBLIC_ACCESS }
+           - { path: ^/api,       roles: PUBLIC_ACCESS}
 
 
 when@test:

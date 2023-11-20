@@ -27,11 +27,11 @@ class Com
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Utilisateur $utilisateur = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Trajet $trajet = null;
+    private ?Trip $trip = null;
 
     public function getId(): ?int
     {
@@ -74,26 +74,26 @@ class Com
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): static
+    public function setUser(?User $user): static
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getTrajet(): ?Trajet
+    public function getTrip(): ?Trip
     {
-        return $this->trajet;
+        return $this->trip;
     }
 
-    public function setTrajet(?Trajet $trajet): static
+    public function setTrip(?Trip $trip): static
     {
-        $this->trajet = $trajet;
+        $this->trip = $trip;
 
         return $this;
     }

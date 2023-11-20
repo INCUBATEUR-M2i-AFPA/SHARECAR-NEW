@@ -38,14 +38,12 @@ class Etape
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Trajet $trajet = null;
+    private ?Trip $trip = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
-
 
   
     public function getAdresseDepart(): ?string
@@ -121,15 +119,19 @@ class Etape
 
     
 
-    public function getTrajet(): ?Trajet
+    public function getTrip(): ?Trip
     {
-        return $this->trajet;
+        return $this->trip;
     }
 
-    public function setTrajet(?Trajet $trajet): static
+    public function setTrip(?Trip $trip): static
     {
-        $this->trajet = $trajet;
+        $this->trip = $trip;
 
         return $this;
+
+        
     }
+
+    
 }

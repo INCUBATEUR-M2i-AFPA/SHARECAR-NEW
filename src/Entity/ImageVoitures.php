@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ImageVoituresRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Utilisateur;
+use App\Entity\User;
 
 #[ORM\Entity(repositoryClass: ImageVoituresRepository::class)]
 class ImageVoitures
@@ -17,8 +17,8 @@ class ImageVoitures
     #[ORM\Column(type: 'string')]
     private $imageUrl; 
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: "imagesVoitures")]
-    private ?Utilisateur $utilisateur = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "imagesVoitures")]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -36,14 +36,14 @@ class ImageVoitures
         return $this;
     }
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): self
+    public function setUser(?User $user): self
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
         return $this;
     }
 }

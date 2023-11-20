@@ -9,8 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Utilisateur;
-use App\Repository\UtilisateurRepository;
+use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -18,24 +18,24 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ImagesVoitureController extends AbstractController
 {
     private $manager;
-    private $utilisateur;
+    private $user;
 
-    public function __construct(EntityManagerInterface $manager, UtilisateurRepository $utilisateur, TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
+    public function __construct(EntityManagerInterface $manager, UserRepository $user, TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
     {
          $this->manager = $manager;
-         $this->utilisateur = $utilisateur;
+         $this->user = $user;
          $this->jwtManager = $jwtManager;
          $this->tokenStorageInterface = $tokenStorageInterface;
     }
 
     #[Route('/api/images_voiture', name: 'app_images_voiture', methods: ['GET'])]
-    public function imagesVoiture(Request $request, JWTTokenManagerInterface $jwtManager, TokenStorageInterface $tokenStorage, UtilisateurRepository $utilisateur): Response
+    public function imagesVoiture(Request $request, JWTTokenManagerInterface $jwtManager, TokenStorageInterface $tokenStorage, UserRepository $user): Response
     {
         $token = $tokenStorage->getToken();
         $user = $token->getUser();
 
-        if (!$user instanceof Utilisateur) {
-            return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+        if (!$user instanceof User) {
+            return new JsonResponse(['message' => 'User non authentifié.'], 401);
         }
 
         return $this->json($user);
@@ -47,8 +47,8 @@ class ImagesVoitureController extends AbstractController
         $token = $tokenStorage->getToken();
         $user = $token->getUser();
     
-        if (!$user instanceof Utilisateur) {
-            return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+        if (!$user instanceof User) {
+            return new JsonResponse(['message' => 'User non authentifié.'], 401);
         }
     
         $data = json_decode($request->getContent(), true);
@@ -59,7 +59,7 @@ class ImagesVoitureController extends AbstractController
             foreach ($imageUrls as $imageUrl) {
                 $image = new ImageVoitures();
                 $image->setImageUrl($imageUrl);
-                $image->setUtilisateur($user);
+                $image->setUser($user);
     
                 $entityManager->persist($image);
             }
@@ -79,8 +79,8 @@ class ImagesVoitureController extends AbstractController
         $token = $tokenStorage->getToken();
         $user = $token->getUser();
     
-        if (!$user instanceof Utilisateur) {
-            return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+        if (!$user instanceof User) {
+            return new JsonResponse(['message' => 'User non authentifié.'], 401);
         }
     
         $images = $user->getImageVoitures(); // Utilisez getImageVoitures au lieu de getImages

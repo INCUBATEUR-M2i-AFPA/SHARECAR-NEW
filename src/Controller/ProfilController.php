@@ -9,8 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Utilisateur;
-use App\Repository\UtilisateurRepository;
+use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -21,24 +21,24 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 class ProfilController extends AbstractController
 {
     private $manager;
-    private $utilisateur;
+    private $user;
 
-    public function __construct(EntityManagerInterface $manager, UtilisateurRepository $utilisateur, TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
+    public function __construct(EntityManagerInterface $manager, UserRepository $user, TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
     {
          $this->manager=$manager;
-         $this->utilisateur=$utilisateur;
+         $this->user=$user;
          $this->jwtManager = $jwtManager;
          $this->tokenStorageInterface = $tokenStorageInterface;
     }
 
     #[Route('/api/profil', name: 'app_profil', methods: ['GET'])]
-    public function profil(Request $request, JWTTokenManagerInterface $jwtManager, TokenStorageInterface $tokenStorage, UtilisateurRepository $utilisateur): Response
+    public function profil(Request $request, JWTTokenManagerInterface $jwtManager, TokenStorageInterface $tokenStorage, UserRepository $user): Response
     {
         $token = $tokenStorage->getToken();
         $user = $token->getUser();
     
-        if (!$user instanceof Utilisateur) {
-            return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+        if (!$user instanceof User) {
+            return new JsonResponse(['message' => 'User non authentifié.'], 401);
         }
     
         return $this->json($user);
@@ -46,7 +46,7 @@ class ProfilController extends AbstractController
     
 
     #[Route('/api/profil_modif', name: 'app_profil_modif', methods: ['PUT'])]
-    public function profilModif(Request $request, UtilisateurRepository $utilisateurRepository, JWTTokenManagerInterface $jwtManager, EntityManagerInterface $manager): Response
+    public function profilModif(Request $request, UserRepository $userRepository, JWTTokenManagerInterface $jwtManager, EntityManagerInterface $manager): Response
     { 
       $data=json_decode($request->getContent(),true);
       
@@ -61,33 +61,33 @@ class ProfilController extends AbstractController
 ;
       $decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
       $email = $decodedJwtToken['username'];
-      $utilisateur = $utilisateurRepository->findOneByEmail($email);
+      $user = $userRepository->findOneByEmail($email);
 
-      if(!$utilisateur)
+      if(!$user)
       {
         return new JsonResponse
         (
             [
               'status'=>false,
-              'message'=>'Utilisateur non trouve'
+              'message'=>'User non trouve'
 
             ]
 
         );
       }
-      if($utilisateur)
+      if($user)
        {         
-         $utilisateur->setNom($nom);
-         $utilisateur->setPrenom($prenom);
-         $utilisateur->setPseudo($pseudo);
-         $utilisateur->setEmail($email);
-         $utilisateur->setAdresse($adresse);
-         $utilisateur->setCodePostal($code_postal);
-         $utilisateur->setVille($ville);
-         $utilisateur->setDateDeNaissance($date_de_naissance);
+         $user->setNom($nom);
+         $user->setPrenom($prenom);
+         $user->setPseudo($pseudo);
+         $user->setEmail($email);
+         $user->setAdresse($adresse);
+         $user->setCodePostal($code_postal);
+         $user->setVille($ville);
+         $user->setDateDeNaissance($date_de_naissance);
        }
 
-       $this->manager->persist($utilisateur);
+       $this->manager->persist($user);
        $this->manager->flush();
 
        return new JsonResponse
@@ -99,7 +99,7 @@ class ProfilController extends AbstractController
            );
     }
     #[Route('/api/profil_modif_bio', name: 'app_profil_modif_bio', methods: ['PUT'])]
-    public function profilModifBio(Request $request, UtilisateurRepository $utilisateurRepository, JWTTokenManagerInterface $jwtManager, EntityManagerInterface $manager): Response
+    public function profilModifBio(Request $request, UserRepository $userRepository, JWTTokenManagerInterface $jwtManager, EntityManagerInterface $manager): Response
     { 
       $data=json_decode($request->getContent(),true);
     
@@ -107,27 +107,27 @@ class ProfilController extends AbstractController
 ;
       $decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
       $email = $decodedJwtToken['username'];
-      $utilisateur = $utilisateurRepository->findOneByEmail($email);
+      $user = $userRepository->findOneByEmail($email);
 
-      if(!$utilisateur)
+      if(!$user)
       {
         return new JsonResponse
         (
             [
               'status'=>false,
-              'message'=>'Utilisateur non trouve'
+              'message'=>'User non trouve'
 
             ]
 
         );
       }
-      if($utilisateur)
+      if($user)
        {         
-         $utilisateur->setBiographie($biographie);
+         $user->setBiographie($biographie);
 
        }
 
-       $this->manager->persist($utilisateur);
+       $this->manager->persist($user);
        $this->manager->flush();
 
        return new JsonResponse
@@ -146,18 +146,18 @@ class ProfilController extends AbstractController
         $token = $tokenStorage->getToken();
         $user = $token->getUser();
     
-        if (!$user instanceof Utilisateur) {
-            return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+        if (!$user instanceof User) {
+            return new JsonResponse(['message' => 'User non authentifié.'], 401);
         }
     
         $data = json_decode($request->getContent(), true);
     
         if (isset($data['image_url'])) {
-            // Créez une nouvelle entité Image, associez-la à l'utilisateur et enregistrez-la en base de données
+            // Créez une nouvelle entité Image, associez-la à l'user et enregistrez-la en base de données
             $imageUrl = $data['image_url'];
             $image = new Image();
             $image->setUrl($imageUrl);
-            $image->setUtilisateur($user);
+            $image->setUser($user);
     
             $entityManager->persist($image);
             $entityManager->flush();
@@ -174,8 +174,8 @@ class ProfilController extends AbstractController
         $token = $tokenStorage->getToken();
         $user = $token->getUser();
     
-        if (!$user instanceof Utilisateur) {
-            return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+        if (!$user instanceof User) {
+            return new JsonResponse(['message' => 'User non authentifié.'], 401);
         }
     
         $images = $user->getImages();
@@ -194,11 +194,11 @@ class ProfilController extends AbstractController
     #[Route('/api/profil/updatepassword', name: 'app_modification_mot_de_passe', methods: ['POST'])]
     public function modifierMotDePasse(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager, JWTTokenManagerInterface $jwtManager, TokenStorageInterface $tokenStorage): Response
     {
-        // Récupérez le token JWT de l'utilisateur actuel
+        // Récupérez le token JWT de l'user actuel
         $token = $tokenStorage->getToken();
         
         if (!$token) {
-            return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+            return new JsonResponse(['message' => 'User non authentifié.'], 401);
         }
     
         // Vérifiez si le token est valide en essayant de le décoder
@@ -210,8 +210,8 @@ class ProfilController extends AbstractController
  
     $user = $this->getUser();
 
-    if (!$user instanceof Utilisateur) {
-        return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+    if (!$user instanceof User) {
+        return new JsonResponse(['message' => 'User non authentifié.'], 401);
     }
 
     $data = json_decode($request->getContent(), true);
@@ -241,11 +241,11 @@ public function desactiverCompte(Request $request, EntityManagerInterface $entit
 {
     $user = $this->getUser();
 
-    if (!$user instanceof Utilisateur) {
-        return new JsonResponse(['message' => 'Utilisateur non authentifié.'], 401);
+    if (!$user instanceof User) {
+        return new JsonResponse(['message' => 'User non authentifié.'], 401);
     }
 
-    // Ajoutez le code pour désactiver le compte de l'utilisateur ici.
+    // Ajoutez le code pour désactiver le compte de l'user ici.
     $user->setEnabled(false);
 
     $entityManager->persist($user);

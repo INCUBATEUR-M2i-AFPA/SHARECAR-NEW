@@ -16,17 +16,17 @@ class Image
     #[ORM\Column(type: "string")]
     private $url;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: "images")]
-    private ?Utilisateur $utilisateur = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "images")]
+    private ?User $user = null;
 
-    public function getUtilisateur(): ?Utilisateur
+    public function getUser(): ?User
     {
-        return $this->utilisateur;
+        return $this->user;
     }
 
-    public function setUtilisateur(?Utilisateur $utilisateur): self
+    public function setUser(?User $user): self
     {
-        $this->utilisateur = $utilisateur;
+        $this->user = $user;
         return $this;
     }
 
